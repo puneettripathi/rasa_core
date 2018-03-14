@@ -268,6 +268,11 @@ which actions you need to run. After running these actions, you need to notify
 the framework that you executed them and tell the model about any update of the
 internal dialogue state for that user. All of these interactions are done using
 a HTTP REST interface.</p>
+<p>You can also use a single, simpler endpoint called <cite>/respond</cite>, which just returns
+all of the messages your bot should send back to the user. In general, this only
+works if all of your actions are simple utterances (messages sent to the user).
+It can make use of custom actions, but then these <em>have</em> to be implemented in
+python and executed on the machine that runs the server.</p>
 <p>To activate the remote mode, include</p>
 <div class="highlight-yaml"><div class="highlight"><pre><span></span><span class="l l-Scalar l-Scalar-Plain">action_factory</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">remote</span>
 </pre></div>
@@ -504,6 +509,44 @@ wait for the next user input.</p>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; no error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="post">
+<dt id="post--conversations-(str-sender_id)-respond">
+<code class="descname">POST </code><code class="descname">/conversations/</code><span class="sig-paren">(</span><em class="property">str: </em><em>sender_id</em><span class="sig-paren">)</span><code class="descname">/respond</code><a class="headerlink" href="#post--conversations-(str-sender_id)-respond" title="Permalink to this definition">¶</a></dt>
+<dd><p>Notify the dialogue engine that the user posted a new message, and get
+a list of response messages the bot should send back.
+You must <code class="docutils literal"><span class="pre">POST</span></code> data in this format <code class="docutils literal"><span class="pre">'{&quot;query&quot;:&quot;&lt;your</span> <span class="pre">text</span> <span class="pre">to</span> <span class="pre">parse&gt;&quot;}'</span></code>,
+you can do this with</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>curl -XPOST localhost:5005/conversations/default/respond -d <span class="se">\</span>
+  <span class="s1">&#39;{&quot;query&quot;:&quot;hello there&quot;}&#39;</span> <span class="p">|</span> python -mjson.tool
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
+
+<span class="p">[</span>
+  <span class="p">{</span>
+    <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="s2">&quot;Hi! welcome to the pizzabot&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;data&quot;</span><span class="o">:</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="o">:</span> <span class="s2">&quot;order pizza&quot;</span><span class="p">,</span> <span class="s2">&quot;payload&quot;</span><span class="o">:</span> <span class="s2">&quot;/start_order&quot;</span><span class="p">},</span>
+  <span class="p">}</span>
+<span class="p">]</span>
 </pre></div>
 </div>
 <table class="docutils field-list" frame="void" rules="none">
