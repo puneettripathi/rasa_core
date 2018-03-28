@@ -294,14 +294,14 @@ We won&#8217;t use machine learning yet, we will just create a policy which memo
         <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span> <span class="o">=</span> <span class="n">ensemble</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span> <span class="o">=</span> <span class="n">featurizer</span>
 
-    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_history</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_history</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
               <span class="n">augmentation_factor</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">max_training_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
               <span class="n">max_number_of_trackers</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Trains a policy on a domain using training data from a file.</span>
 
 <span class="sd">        :param augmentation_factor: how many stories should be created by</span>
 <span class="sd">                                    randomly concatenating stories</span>
-<span class="sd">        :param filename: story file containing the training conversations</span>
+<span class="sd">        :param resource_name: story file containing the training conversations</span>
 <span class="sd">        :param max_history: number of past actions to consider for the</span>
 <span class="sd">                            prediction of the next action</span>
 <span class="sd">        :param max_training_samples: specifies how many training samples to</span>
@@ -318,25 +318,25 @@ We won&#8217;t use machine learning yet, we will just create a policy which memo
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Policy trainer got kwargs: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">kwargs</span><span class="p">))</span>
         <span class="n">check_domain_sanity</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
 
-        <span class="n">training_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_training_data</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">max_history</span><span class="p">,</span>
-                                           <span class="n">augmentation_factor</span><span class="p">,</span>
-                                           <span class="n">max_training_samples</span><span class="p">,</span>
-                                           <span class="n">max_number_of_trackers</span><span class="p">,</span>
-                                           <span class="n">remove_duplicates</span><span class="p">)</span>
+        <span class="n">training_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_training_data</span><span class="p">(</span>
+                <span class="n">resource_name</span><span class="p">,</span> <span class="n">max_history</span><span class="p">,</span> <span class="n">augmentation_factor</span><span class="p">,</span>
+                <span class="n">max_training_samples</span><span class="p">,</span> <span class="n">max_number_of_trackers</span><span class="p">,</span> <span class="n">remove_duplicates</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">training_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ensemble</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">training_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span>
+                            <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_prepare_training_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">max_history</span><span class="p">,</span> <span class="n">augmentation_factor</span><span class="p">,</span>
+    <span class="k">def</span> <span class="nf">_prepare_training_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resource_name</span><span class="p">,</span> <span class="n">max_history</span><span class="p">,</span>
+                               <span class="n">augmentation_factor</span><span class="p">,</span>
                                <span class="n">max_training_samples</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
                                <span class="n">max_number_of_trackers</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
                                <span class="n">remove_duplicates</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Reads training data from file and prepares it for the training.&quot;&quot;&quot;</span>
 
-        <span class="kn">from</span> <span class="nn">rasa_core.training</span> <span class="k">import</span> <span class="n">extract_training_data_from_file</span>
+        <span class="kn">from</span> <span class="nn">rasa_core</span> <span class="k">import</span> <span class="n">training</span>
 
-        <span class="k">if</span> <span class="n">filename</span><span class="p">:</span>
-            <span class="n">training_data</span> <span class="o">=</span> <span class="n">extract_training_data_from_file</span><span class="p">(</span>
-                    <span class="n">filename</span><span class="p">,</span>
+        <span class="k">if</span> <span class="n">resource_name</span><span class="p">:</span>
+            <span class="n">training_data</span> <span class="o">=</span> <span class="n">training</span><span class="o">.</span><span class="n">extract_training_data</span><span class="p">(</span>
+                    <span class="n">resource_name</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">featurizer</span><span class="p">,</span>
                     <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">(),</span>
