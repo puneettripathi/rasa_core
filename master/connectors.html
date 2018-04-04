@@ -399,8 +399,79 @@ an app or an individual person</li>
 as your <code class="docutils literal"><span class="pre">slack_token</span></code></li>
 </ol>
 </div></blockquote>
-<p class="last">For more detailed steps, visit the
+<p>For more detailed steps, visit the
 <a class="reference external" href="https://api.slack.com/incoming-webhooks">slack api docs</a>.</p>
+<p>If you want to connect to the mattermost input channel using the run script, e.g. using</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
+    --port <span class="m">5002</span> --connector mattermost --credentials mattermost_credentials.yml
+</pre></div>
+</div>
+<p>you need to supply a <code class="docutils literal"><span class="pre">mattermost_credentials.yml</span></code> with the following content:</p>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">url</span><span class="p">:</span> <span class="s2">&quot;https://chat.example.com/api/v4&quot;</span>
+<span class="n">team</span><span class="p">:</span> <span class="s2">&quot;community&quot;</span>
+<span class="n">user</span><span class="p">:</span> <span class="s2">&quot;user@user.com&quot;</span>
+<span class="n">pw</span><span class="p">:</span> <span class="s2">&quot;password&quot;</span>
+</pre></div>
+</td></tr></table></div>
+<p>A <code class="docutils literal"><span class="pre">MattermostInput</span></code> instance provides a flask blueprint for creating
+a webserver. This lets you separate the exact endpoints and implementation
+from your webserver creation logic.</p>
+<p>Code to create a Mattermost-compatible webserver looks like this:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="kn">import</span> <span class="n">HttpInputChannel</span>
+<span class="kn">from</span> <span class="nn">rasa_core.channels.slack</span> <span class="kn">import</span> <span class="n">MattermostInput</span>
+<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="kn">import</span> <span class="n">RegexInterpreter</span>
+
+<span class="c1"># load your trained agent</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;dialogue&quot;</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">())</span>
+
+<span class="n">input_channel</span> <span class="o">=</span> <span class="n">MattermostInput</span><span class="p">(</span>
+   <span class="n">url</span><span class="o">=</span><span class="s2">&quot;http://chat.example.com/api/v4&quot;</span><span class="p">,</span>  <span class="c1"># this is the url of the api for your mattermost instance</span>
+   <span class="n">team</span><span class="o">=</span><span class="s2">&quot;community&quot;</span>  <span class="c1"># the name of your team for mattermost</span>
+   <span class="n">user</span><span class="o">=</span><span class="s2">&quot;user@email.com&quot;</span> <span class="c1"># the username of your bot user that will post messages</span>
+   <span class="n">pw</span><span class="o">=</span><span class="s2">&quot;password&quot;</span> <span class="c1"># the password of your bot user that will post messages</span>
+<span class="p">)</span>
+
+<span class="n">agent</span><span class="o">.</span><span class="n">handle_channel</span><span class="p">(</span><span class="n">HttpInputChannel</span><span class="p">(</span><span class="mi">5004</span><span class="p">,</span> <span class="s2">&quot;/app&quot;</span><span class="p">,</span> <span class="n">input_channel</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+<p>The arguments for the <code class="docutils literal"><span class="pre">HttpInputChannel</span></code> are the port, the url prefix, and the input channel.
+The default endpoint for receiving mattermost channel messages is <code class="docutils literal"><span class="pre">/webhook</span></code>, so the example
+above would listen for messages on <code class="docutils literal"><span class="pre">/app/webhook</span></code>. This is the url you should add in the
+mattermost outgoing webhook.</p>
+<div class="last admonition note">
+<p class="first admonition-title">Note</p>
+<p><strong>How to setup the outgoing webhook:</strong></p>
+<blockquote>
+<div><ol class="arabic simple">
+<li>To create the mattermost outgoing webhook login to your mattermost team site and go to <strong>Main Menu &gt; Integrations &gt; Outgoing Webhooks</strong></li>
+<li>Click <strong>Add outgoing webhook</strong></li>
+<li>Fill out the details including the channel you want the bot in.  You will need to ensure the <strong>trigger words</strong> section is setup with &#64;yourbotname so that way it doesn&#8217;t trigger on everything that is said.</li>
+<li>Make sure <strong>trigger when</strong> section is set to value <strong>first word matches a trigger word exactly</strong></li>
+<li>For the callback url this needs to be your ngrok url where you have your webhook running in core or your public address with /webhook example: <code class="docutils literal"><span class="pre">http://test.example.com/webhook</span></code></li>
+</ol>
+</div></blockquote>
+<p class="last">For more detailed steps, visit the
+<a class="reference external" href="https://docs.mattermost.com/guides/developer.html">mattermost docs at</a>.</p>
+</div>
 </div>
 </div>
 </div>
