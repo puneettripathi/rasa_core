@@ -755,6 +755,35 @@ endpoint.</p>
 </dd></dl>
 
 <dl class="get">
+<dt id="get--conversations">
+<code class="descname">GET </code><code class="descname">/conversations</code><a class="headerlink" href="#get--conversations" title="Permalink to this definition">¶</a></dt>
+<dd><p>List the sender ids of all the running conversations.</p>
+<p><strong>Example request</strong>:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>curl http://localhost:5005/conversations <span class="p">|</span> python -mjson.tool
+</pre></div>
+</div>
+<p><strong>Example response</strong>:</p>
+<div class="highlight-http"><div class="highlight"><pre><span></span><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Vary</span><span class="o">:</span> <span class="l">Accept</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">text/javascript</span>
+
+<span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Status Codes:</th><td class="field-body"><ul class="first last simple">
+<li><a class="reference external" href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.2.1">200 OK</a> &#8211; no error</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="get">
 <dt id="get--version">
 <code class="descname">GET </code><code class="descname">/version</code><a class="headerlink" href="#get--version" title="Permalink to this definition">¶</a></dt>
 <dd><p>Version of Rasa Core that is currently running.</p>
