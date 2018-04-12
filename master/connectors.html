@@ -120,9 +120,19 @@
 <li class="toctree-l3"><a class="reference internal" href="#id2">Directly using python</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#telegram-setup">Telegram Setup</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#mattermost-setup">Mattermost Setup</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id3">Using run script</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id4">Directly using python</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#telegram-setup">Telegram Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">Using run script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">Directly using python</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#twilio-setup">Twilio Setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id7">Using run script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id8">Directly using python</a></li>
 </ul>
 </li>
 </ul>
@@ -399,8 +409,15 @@ an app or an individual person</li>
 as your <code class="docutils literal"><span class="pre">slack_token</span></code></li>
 </ol>
 </div></blockquote>
-<p>For more detailed steps, visit the
+<p class="last">For more detailed steps, visit the
 <a class="reference external" href="https://api.slack.com/incoming-webhooks">slack api docs</a>.</p>
+</div>
+</div>
+</div>
+<div class="section" id="mattermost-setup">
+<span id="mattermost-connector"></span><h2>Mattermost Setup<a class="headerlink" href="#mattermost-setup" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h3>Using run script<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to the mattermost input channel using the run script, e.g. using</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current <span class="se">\</span>
     --port <span class="m">5002</span> --connector mattermost --credentials mattermost_credentials.yml
@@ -416,6 +433,9 @@ as your <code class="docutils literal"><span class="pre">slack_token</span></cod
 <span class="n">pw</span><span class="p">:</span> <span class="s2">&quot;password&quot;</span>
 </pre></div>
 </td></tr></table></div>
+</div>
+<div class="section" id="id4">
+<h3>Directly using python<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>A <code class="docutils literal"><span class="pre">MattermostInput</span></code> instance provides a flask blueprint for creating
 a webserver. This lets you separate the exact endpoints and implementation
 from your webserver creation logic.</p>
@@ -457,7 +477,7 @@ from your webserver creation logic.</p>
 The default endpoint for receiving mattermost channel messages is <code class="docutils literal"><span class="pre">/webhook</span></code>, so the example
 above would listen for messages on <code class="docutils literal"><span class="pre">/app/webhook</span></code>. This is the url you should add in the
 mattermost outgoing webhook.</p>
-<div class="last admonition note">
+<div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p><strong>How to setup the outgoing webhook:</strong></p>
 <blockquote>
@@ -474,11 +494,10 @@ mattermost outgoing webhook.</p>
 </div>
 </div>
 </div>
-</div>
 <div class="section" id="telegram-setup">
 <span id="telegram-connector"></span><h2>Telegram Setup<a class="headerlink" href="#telegram-setup" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id3">
-<h3>Using run script<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>Using run script<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <p>If you want to connect to the slack input channel using the run script, e.g. using</p>
 <div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current
     --port <span class="m">5002</span> -c telegram --credentials telegram_credentials.yml
@@ -493,8 +512,8 @@ mattermost outgoing webhook.</p>
 </pre></div>
 </td></tr></table></div>
 </div>
-<div class="section" id="id4">
-<h3>Directly using python<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>Directly using python<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>A <code class="docutils literal"><span class="pre">TelegramInput</span></code> instance provides a flask blueprint for creating
 a webserver. This lets you seperate the exact endpoints and implementation
 from your webserver creation logic.</p>
@@ -547,6 +566,79 @@ be your <code class="docutils literal"><span class="pre">verify</span></code>.
 mode by entering <em>/setprivacy</em>. Then the bot will only listen when the message is started
 with <em>/bot</em></div></blockquote>
 <p class="last">For more information on the Telegram HTTP API, go to <a class="reference external" href="https://core.telegram.org/bots/api">https://core.telegram.org/bots/api</a></p>
+</div>
+</div>
+</div>
+<div class="section" id="twilio-setup">
+<span id="twilio-connector"></span><h2>Twilio Setup<a class="headerlink" href="#twilio-setup" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h3>Using run script<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>If you want to connect to the twilio input channel using the run script, e.g. using</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>python -m rasa_core.run -d models/dialogue -u models/nlu/current
+    --port <span class="m">5002</span> -c twilio --credentials twilio_credentials.yml
+</pre></div>
+</div>
+<p>you need to supply a <code class="docutils literal"><span class="pre">twilio_credentials.yml</span></code> with the following content:</p>
+<div class="highlight-default"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="n">account_sid</span><span class="p">:</span> <span class="s2">&quot;ACbc2dxxxxxxxxxxxx19d54bdcd6e41186&quot;</span>
+<span class="n">auth_token</span><span class="p">:</span> <span class="s2">&quot;e231c197493a7122d475b4xxxxxxxxxx&quot;</span>
+<span class="n">twilio_number</span><span class="p">:</span> <span class="s2">&quot;+440123456789&quot;</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<div class="section" id="id8">
+<h3>Directly using python<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<p>A <code class="docutils literal"><span class="pre">TwilioInput</span></code> instance provides a flask blueprint for creating
+a webserver. This lets you seperate the exact endpoints and implementation
+from your webserver creation logic.</p>
+<p>Code to create a Twilio-compatible webserver looks like this:</p>
+<div class="highlight-python"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">rasa_core.channels</span> <span class="kn">import</span> <span class="n">HttpInputChannel</span>
+<span class="kn">from</span> <span class="nn">rasa_core.channels.twilio</span> <span class="kn">import</span> <span class="n">TwilioInput</span>
+<span class="kn">from</span> <span class="nn">rasa_core.agent</span> <span class="kn">import</span> <span class="n">Agent</span>
+<span class="kn">from</span> <span class="nn">rasa_core.interpreter</span> <span class="kn">import</span> <span class="n">RegexInterpreter</span>
+
+<span class="c1"># load your trained agent</span>
+<span class="n">agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;dialogue&quot;</span><span class="p">,</span> <span class="n">interpreter</span><span class="o">=</span><span class="n">RegexInterpreter</span><span class="p">())</span>
+
+<span class="n">input_channel</span> <span class="o">=</span> <span class="n">TwilioInput</span><span class="p">(</span>
+  <span class="n">account_sid</span><span class="o">=</span><span class="s2">&quot;YOUR_ACCOUNT_SID&quot;</span><span class="p">,</span> <span class="c1"># you get this from your twilio account</span>
+  <span class="n">auth_token</span><span class="o">=</span><span class="s2">&quot;YOUR_AUTH_TOKEN&quot;</span><span class="p">,</span> <span class="c1"># also from your twilio account</span>
+  <span class="n">twilio_number</span><span class="o">=</span><span class="s2">&quot;YOUR_TWILIO_NUMBER&quot;</span> <span class="c1"># a number associated with your twilio account</span>
+<span class="p">)</span>
+
+<span class="n">agent</span><span class="o">.</span><span class="n">handle_channel</span><span class="p">(</span><span class="n">HttpInputChannel</span><span class="p">(</span><span class="mi">5004</span><span class="p">,</span> <span class="s2">&quot;/app&quot;</span><span class="p">,</span> <span class="n">input_channel</span><span class="p">))</span>
+</pre></div>
+</td></tr></table></div>
+<p>The arguments for the <code class="docutils literal"><span class="pre">HttpInputChannel</span></code> are the port, the url prefix, and the input channel.
+The default endpoint for receiving messages is <code class="docutils literal"><span class="pre">/webhook</span></code>, so the example above above would
+listen for messages on <code class="docutils literal"><span class="pre">/app/webhook</span></code>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p><strong>How to get the Twilio credentials:</strong> You need to set up a Twilio account.</p>
+<blockquote>
+<div>1. Once you have created a Twilio account, you need to create a new project.
+The basic important product to select here is <code class="docutils literal"><span class="pre">Programmable</span> <span class="pre">SMS</span></code>.
+2. Once you have created the project, navigate to the Dashboard of <code class="docutils literal"><span class="pre">Programmable</span>
+<span class="pre">SMS</span></code> and click on <code class="docutils literal"><span class="pre">Get</span> <span class="pre">Started</span></code> and follow the steps to connect a phone
+number to the project.
+3. Now you can use the <code class="docutils literal"><span class="pre">Account</span> <span class="pre">SID</span></code>, <code class="docutils literal"><span class="pre">Auth</span> <span class="pre">Token</span></code> and the phone number
+you purchased in your credentials yml.</div></blockquote>
+<p class="last">For more information on the Twilio REST API, go to <a class="reference external" href="https://www.twilio.com/docs/iam/api">https://www.twilio.com/docs/iam/api</a></p>
 </div>
 </div>
 </div>
