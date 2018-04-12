@@ -374,7 +374,7 @@ from your webserver creation logic.</p>
 
 <span class="n">input_channel</span> <span class="o">=</span> <span class="n">SlackInput</span><span class="p">(</span>
    <span class="n">slack_token</span><span class="o">=</span><span class="s2">&quot;YOUR_SLACK_TOKEN&quot;</span><span class="p">,</span>  <span class="c1"># this is the `bot_user_o_auth_access_token`</span>
-   <span class="n">slack_channel</span><span class="o">=</span><span class="s2">&quot;YOUR_SLACK_CHANNEL&quot;</span>  <span class="c1"># the name of your channel to which the bot posts</span>
+   <span class="n">slack_channel</span><span class="o">=</span><span class="s2">&quot;YOUR_SLACK_CHANNEL&quot;</span>  <span class="c1"># the name of your channel to which the bot posts (optional)</span>
 <span class="p">)</span>
 
 <span class="n">agent</span><span class="o">.</span><span class="n">handle_channel</span><span class="p">(</span><span class="n">HttpInputChannel</span><span class="p">(</span><span class="mi">5004</span><span class="p">,</span> <span class="s2">&quot;/app&quot;</span><span class="p">,</span> <span class="n">input_channel</span><span class="p">))</span>
@@ -383,7 +383,7 @@ from your webserver creation logic.</p>
 <p>The arguments for the <code class="docutils literal"><span class="pre">HttpInputChannel</span></code> are the port, the url prefix, and the input channel.
 The default endpoint for receiving facebook messenger messages is <code class="docutils literal"><span class="pre">/webhook</span></code>, so the example
 above would listen for messages on <code class="docutils literal"><span class="pre">/app/webhook</span></code>. This is the url you should add in the
-facebook developer portal.</p>
+facebook developer portal. N.b. if you do not set the <code class="docutils literal"><span class="pre">slack_channel</span></code> keyword argument, messages will by delivered back to the user who sent them.</p>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p><strong>How to get the Slack credentials:</strong> You need to set up a Slack app.</p>
